@@ -5,3 +5,5 @@
 GUI: [gocui](https://github.com/jroimartin/gocui)
 存储: [badger](https://github.com/dgraph-io/badger)
 
+## 原型图
+![](https://github.com/lyeka/gotd/blob/master/ui.png)
