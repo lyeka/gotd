@@ -12,7 +12,7 @@ func Register(s *Server, g *gin.RouterGroup) {
 		email := c.PostForm("email")
 		password := c.PostForm("password")
 
-		user := _type.User{
+		user := &_type.User{
 			NickName: nickName,
 			Email: email,
 			Password: password,
