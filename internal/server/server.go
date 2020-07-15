@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"github.com/gin-gonic/gin"
+	"github.com/lyeka/gotd/internal/auth"
 	"github.com/lyeka/gotd/internal/config"
 	"github.com/lyeka/gotd/internal/db"
 	"log"
@@ -21,16 +22,28 @@ func (s *Server) Run(port string) {
 
 func newEngine() *gin.Engine {
 	r := gin.New()
-	r.Use(gin.Logger(), gin.Recovery())
 	return r
 }
 
+// 注册中间件
+func registerMiddleware(s *Server, cfg *config.Config) {
+	s.Engine.Use(gin.Logger(), gin.Recovery())
+	// 认证中间件
+	s.Engine.Use(auth.AuthMiddleware(cfg))
+}
+
 // 注册路由
-func registerRouter(s *Server) {
+func registerRouter(s *Server, cfg *config.Config) {
 
 	v1 := s.Engine.Group("/api/v1")
 	{
 		Ping(s, v1)
+
+		userGroup := v1.Group("/user")
+		{
+			Register(s, userGroup)
+			Login(s, cfg, userGroup)
+		}
 	}
 }
 
@@ -47,7 +60,8 @@ func NewServer(cfg *config.Config) *Server {
 
 	server.EX = "go todo"
 
-	registerRouter(server)
+	registerMiddleware(server, cfg)
+	registerRouter(server, cfg)
 
 	return server
 }

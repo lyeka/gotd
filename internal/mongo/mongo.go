@@ -2,17 +2,24 @@ package mongo
 
 import (
 	"context"
+	"github.com/lyeka/gotd/internal/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
+const (
+	CollUser = "user"
+)
+
+
 type DB struct {
-	Client *mongo.Client
+	DB *mongo.Database
 }
 
-func OpenDB(ctx context.Context, DSN string) (*DB, error){
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(DSN))
+func OpenDB(ctx context.Context, cfg *config.Config) (*DB, error){
+	dbName, dsn := cfg.DbDSN()
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dsn))
 	if err != nil {
 		return nil, err
 	}
@@ -22,6 +29,10 @@ func OpenDB(ctx context.Context, DSN string) (*DB, error){
 		return nil, err
 	}
 
-	return &DB{Client: client}, nil
+	return &DB{DB: client.Database(dbName)}, nil
+}
+
+func (db *DB) CollUser() *mongo.Collection{
+	return db.DB.Collection(CollUser)
 }
 

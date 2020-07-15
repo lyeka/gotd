@@ -8,16 +8,16 @@ import (
 )
 
 type DB interface {
-	Register(user *_type.User) error
-	Login(account, password string) error// account支持用户昵称，邮箱等登录
+	CreateUser(ctx context.Context, user *_type.User) (id string,  err error)
+	VerifyPassword(ctx context.Context, account, password string) (*_type.User, error)// todo account支持用户昵称，邮箱等登录
 }
 
 func OpenDB(ctx context.Context, cfg *config.Config) (db DB, err error) {
 	switch cfg.DBEngine {
 	case "MongoDB":
-		db, err = mongo.OpenDB(ctx, cfg.DbDSN())
+		db, err = mongo.OpenDB(ctx, cfg)
 	default:
-
+		db, err = mongo.OpenDB(ctx, cfg)
 	}
 	return
 }
