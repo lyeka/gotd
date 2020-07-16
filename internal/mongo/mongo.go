@@ -12,12 +12,12 @@ const (
 	CollUser = "user"
 )
 
-
 type DB struct {
-	DB *mongo.Database
+	Client *mongo.Client
+	DB     *mongo.Database
 }
 
-func OpenDB(ctx context.Context, cfg *config.Config) (*DB, error){
+func OpenDB(ctx context.Context, cfg *config.Config) (*DB, error) {
 	dbName, dsn := cfg.DbDSN()
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dsn))
 	if err != nil {
@@ -29,10 +29,9 @@ func OpenDB(ctx context.Context, cfg *config.Config) (*DB, error){
 		return nil, err
 	}
 
-	return &DB{DB: client.Database(dbName)}, nil
+	return &DB{Client: client, DB: client.Database(dbName)}, nil
 }
 
-func (db *DB) CollUser() *mongo.Collection{
+func (db *DB) CollUser() *mongo.Collection {
 	return db.DB.Collection(CollUser)
 }
-

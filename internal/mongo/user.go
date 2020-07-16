@@ -7,26 +7,26 @@ import (
 	"github.com/lyeka/gotd/pkg"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"time"
 )
 
 type User struct {
-	ID primitive.ObjectID `bson:"_id"`
-	Email string
-	Nickname string
-	Password string
+	ID        primitive.ObjectID `bson:"_id"`
+	Email     string
+	Nickname  string
+	Password  string
 	CreatedAt time.Time `bson:"created_at"`
 	UpdatedAt time.Time `bson:"updated_at"`
 }
 
-
 // Register 创建用户
 func (db *DB) CreateUser(ctx context.Context, user *_type.User) (id string, err error) {
-	exist, err := db.GetUserByEmail(ctx, user.Email)
+	_, exist, err := db.GetUserByEmail(ctx, user.Email)
 	if err != nil {
 		return
 	}
-	if exist != nil {
+	if exist {
 		err = errors.New("用户邮箱已存在")
 		return
 	}
@@ -59,7 +59,10 @@ func (db *DB) CreateUser(ctx context.Context, user *_type.User) (id string, err 
 // VerifyPassword 验证密码
 // 正确返回用户信息
 func (db *DB) VerifyPassword(ctx context.Context, email, password string) (*_type.User, error) {
-	user, err := db.GetUserByEmail(ctx, email)
+	user, exist, err := db.GetUserByEmail(ctx, email)
+	if !exist {
+		return nil, errors.New("用户不存在")
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -69,24 +72,31 @@ func (db *DB) VerifyPassword(ctx context.Context, email, password string) (*_typ
 	}
 
 	return &_type.User{
-		Id: user.ID.Hex(),
+		Id:       user.ID.Hex(),
 		Nickname: user.Nickname,
-		Email: user.Email,
+		Email:    user.Email,
 	}, nil
 }
 
 // GetUserByEmail 通过邮箱查询用户
-func (db *DB) GetUserByEmail(ctx context.Context, email string) (*User, error) {
+func (db *DB) GetUserByEmail(ctx context.Context, email string) (user *User, exist bool, err error) {
 	result := db.CollUser().FindOne(ctx, bson.M{"email": email})
-	if err := result.Err(); err != nil {
-		return nil, err
-	}
+	err = result.Err()
 
-	user := new(User)
-	err := result.Decode(user)
+	if err == mongo.ErrNoDocuments {
+		err = nil
+		return
+	}
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	return user, nil
+	user = new(User)
+	err = result.Decode(user)
+	if err != nil {
+		return nil, true, err
+	}
+
+	exist = true
+	return
 }

@@ -28,7 +28,7 @@ func NewJwtToken(uid string, expiredAt int64, key string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	ss, err := token.SignedString(key)
+	ss, err := token.SignedString([]byte(key))
 	return Bearer + ss, err
 }
 
@@ -41,7 +41,7 @@ func ParseToken(tokenString string, key string) (*Claims, error) {
 	}
 	tokenString = s[1]
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return key, nil
+		return []byte(key), nil
 	})
 	if err != nil {
 		return nil, err

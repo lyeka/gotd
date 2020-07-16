@@ -19,7 +19,7 @@ func Register(s *Server, rg *gin.RouterGroup) {
 
 		user := &_type.User{
 			Nickname: nickName,
-			Email: email,
+			Email:    email,
 			Password: password,
 		}
 
@@ -39,9 +39,9 @@ func Register(s *Server, rg *gin.RouterGroup) {
 }
 
 // Login 用户登录
-func Login(s *Server, cfg *config.Config, rg *gin.RouterGroup)  {
+func Login(s *Server, cfg *config.Config, rg *gin.RouterGroup) {
 	rg.POST("/login", func(c *gin.Context) {
-		resp := &Response{Code: http.StatusOK}
+		resp := &Response{Code: http.StatusOK, Message: "登录成功"}
 		email := c.PostForm("email")
 		pwd := c.PostForm("password")
 
@@ -67,4 +67,3 @@ func Login(s *Server, cfg *config.Config, rg *gin.RouterGroup)  {
 		return
 	})
 }
-

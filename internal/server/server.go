@@ -11,9 +11,9 @@ import (
 
 // Server ...
 type Server struct {
-	DB db.DB
+	DB     db.DB
 	Engine *gin.Engine
-	EX string // 测试字段
+	EX     string // 测试字段
 }
 
 func (s *Server) Run(port string) {
@@ -65,7 +65,3 @@ func NewServer(cfg *config.Config) *Server {
 
 	return server
 }
-
-
-
-
