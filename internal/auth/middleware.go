@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+const UID = "uid"
+
 // Auth 认证中间件
 func AuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -27,7 +29,7 @@ func AuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 			c.Abort()
 		}
 		uid := claims.GetUserID()
-		c.Set("uid", uid)
+		c.Set(UID, uid)
 
 		c.Next()
 

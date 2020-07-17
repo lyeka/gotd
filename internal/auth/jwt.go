@@ -11,17 +11,17 @@ const Bearer = "Bearer "
 // Claims 本项目使用的 jwt 声明
 type Claims struct {
 	jwt.StandardClaims
-	Uid string `json:"uid"` // 用户id
+	Uid int64 `json:"uid"` // 用户id
 }
 
-func (c *Claims) GetUserID() string {
+func (c *Claims) GetUserID() int64 {
 	return c.Uid
 }
 
 // NewJwtToken 生成 jwt 令牌
 // uid 用户id
 // expiredAt 过期时间（Unix 时间戳）
-func NewJwtToken(uid string, expiredAt int64, key string) (string, error) {
+func NewJwtToken(uid int64, expiredAt int64, key string) (string, error) {
 	claims := Claims{
 		StandardClaims: jwt.StandardClaims{ExpiresAt: expiredAt},
 		Uid:            uid,

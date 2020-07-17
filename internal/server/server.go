@@ -44,6 +44,13 @@ func registerRouter(s *Server, cfg *config.Config) {
 			Register(s, userGroup)
 			Login(s, cfg, userGroup)
 		}
+
+		taskGroup := v1.Group("task")
+		{
+			CreateOrUpdateTask(s, taskGroup)
+			GetUserTasks(s, taskGroup)
+		}
+
 	}
 }
 

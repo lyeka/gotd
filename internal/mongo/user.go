@@ -6,13 +6,12 @@ import (
 	_type "github.com/lyeka/gotd/internal/type"
 	"github.com/lyeka/gotd/pkg"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"time"
 )
 
 type User struct {
-	ID        primitive.ObjectID `bson:"_id"`
+	ID        int64 `bson:"id"`
 	Email     string
 	Nickname  string
 	Password  string
@@ -21,7 +20,7 @@ type User struct {
 }
 
 // Register 创建用户
-func (db *DB) CreateUser(ctx context.Context, user *_type.User) (id string, err error) {
+func (db *DB) CreateUser(ctx context.Context, user *_type.User) (id int64, err error) {
 	_, exist, err := db.GetUserByEmail(ctx, user.Email)
 	if err != nil {
 		return
@@ -37,8 +36,11 @@ func (db *DB) CreateUser(ctx context.Context, user *_type.User) (id string, err 
 	if err != nil {
 		return
 	}
+
+	id = db.GenerateID()
+
 	innerUser := &User{
-		ID:        primitive.NewObjectID(), // todo NewObjectID 方法是基于当前时间生成的 id，存在不唯一问题
+		ID:        id,
 		Email:     user.Email,
 		Nickname:  user.Nickname,
 		Password:  pwd,
@@ -46,12 +48,10 @@ func (db *DB) CreateUser(ctx context.Context, user *_type.User) (id string, err 
 		UpdatedAt: now,
 	}
 
-	result, err := db.CollUser().InsertOne(ctx, innerUser)
+	_, err = db.CollUser().InsertOne(ctx, innerUser)
 	if err != nil {
 		return
 	}
-
-	id = result.InsertedID.(primitive.ObjectID).Hex()
 
 	return
 }
@@ -72,7 +72,7 @@ func (db *DB) VerifyPassword(ctx context.Context, email, password string) (*_typ
 	}
 
 	return &_type.User{
-		Id:       user.ID.Hex(),
+		ID:       user.ID,
 		Nickname: user.Nickname,
 		Email:    user.Email,
 	}, nil

@@ -1,0 +1,178 @@
+{
+	"info": {
+		"_postman_id": "292dd1d3-1f13-4d39-97f0-2de3698c081a",
+		"name": "gotd",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "用户-注册",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "nickname",
+							"value": "atr",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "augustr2017@163.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "atr123456",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "127.0.0.1:8080/api/v1/user/register",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "用户-登录",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "augustr2017@163.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "atr123456",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "127.0.0.1:8080/api/v1/user/login",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "任务-创建/更新",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTYyNzE5MTMsInVpZCI6MTI4NDAzMTAxMTc0Njc0NjM2OH0.75CYtNcfHI4F6EC7izBIc4fXnupye64lxAsSiqdgJg0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "taskID",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "title1",
+							"type": "text"
+						},
+						{
+							"key": "desc",
+							"value": "desc1",
+							"type": "text"
+						},
+						{
+							"key": "startTime",
+							"value": "2020-08-01",
+							"type": "text"
+						},
+						{
+							"key": "endTime",
+							"value": "2020-08-01: 23:59:59",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "任务-用户任务列表",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTYyNzE5MTMsInVpZCI6MTI4NDAzMTAxMTc0Njc0NjM2OH0.75CYtNcfHI4F6EC7izBIc4fXnupye64lxAsSiqdgJg0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8080/api/v1/task/myTask",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"task",
+						"myTask"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

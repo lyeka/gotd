@@ -6,3 +6,12 @@ type Response struct {
 	Message string      `json:"message"` // 提示信息
 	Data    interface{} `json:"data"`    // 响应内容
 }
+
+const (
+	CodeOK = iota
+	CodeErr
+	CodeInvalidParam
+	CodeErrCreateTask
+	CodeErrUpdateTask
+	CodeErrGetUserTask
+)

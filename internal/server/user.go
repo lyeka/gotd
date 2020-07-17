@@ -53,7 +53,7 @@ func Login(s *Server, cfg *config.Config, rg *gin.RouterGroup) {
 			return
 		}
 
-		uid := user.Id
+		uid := user.ID
 		expiredAt := time.Now().Unix() + cfg.JWTTtl
 		token, err := auth.NewJwtToken(uid, expiredAt, cfg.JWTKey)
 		if err != nil {

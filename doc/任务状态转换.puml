@@ -1,0 +1,14 @@
+@startuml
+
+TaskTODO : 表示还没到任务的开始时间
+TaskProgressing : 表示任务处于安排时间范围内
+TaskDone : 表示任务已经完成
+TaskExpired : 表示任务过期前没有完成
+
+[*] --> TaskTODO
+[*] --> TaskProgressing
+TaskTODO --> TaskProgressing
+TaskProgressing --> TaskDone
+TaskProgressing --> TaskExpired
+TaskExpired --> TaskDone: 任务过期后仍然可以将其改为已完成状态
+@enduml
